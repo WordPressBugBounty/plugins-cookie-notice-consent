@@ -3,8 +3,8 @@ Contributors: christophrado
 Donate link: https://www.paypal.me/christophrado
 Tags: cookie, consent, compliance, gdpr, dsgvo
 Requires at least: 5.0
-Tested up to: 6.5
-Stable tag: 1.6.2
+Tested up to: 6.7
+Stable tag: 1.6.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -75,6 +75,11 @@ If this plugin does not meet your legal requirements, I encourage you not to use
 5. Consent logs and basic consent statistics per category
 
 == Changelog ==
+
+= 1.6.3 =
+* Fixed: Translation loading (_load_textdomain_just_in_time error)
+* Removed: Privacy Signal logic, since browser support is now pretty much dead
+* Tested up to 6.7
 
 = 1.6.2 =
 * Fixed: Deprecation notices when using PHP 8.2+

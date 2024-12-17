@@ -14,8 +14,7 @@ class Cookie_Notice_Consent_Logger {
 	 */
 	public function __construct( $instance ) {
 		$this->cnc = $instance;
-		// Add actions in init, since settings need to be loaded earlier
-		add_action( 'init', array( $this, 'init_logger' ), 50 );
+		add_action( 'init', array( $this, 'init_logger' ), 150 );
 	}
 	
 	/**
@@ -32,7 +31,7 @@ class Cookie_Notice_Consent_Logger {
 	 */
 	public function add_actions() {
 		// Register consent log CPT
-		add_action( 'init', array( $this, 'register_cpt' ), 51 );
+		add_action( 'init', array( $this, 'register_cpt' ), 151 );
 		// Add admin actions
 		add_action( 'admin_init', array( $this, 'manage_admin_views' ) );
 		// Add logs menu page

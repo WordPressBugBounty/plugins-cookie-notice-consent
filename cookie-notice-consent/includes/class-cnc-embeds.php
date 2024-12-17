@@ -14,8 +14,7 @@ class Cookie_Notice_Consent_Embeds {
 	 */
 	public function __construct( $instance ) {
 		$this->cnc = $instance;
-		// Add actions in init, since settings need to be loaded earlier
-		add_action( 'init', array( $this, 'init_embed_block' ) );
+		add_action( 'init', array( $this, 'init_embed_block' ), 150 );
 	}
 	
 	/**

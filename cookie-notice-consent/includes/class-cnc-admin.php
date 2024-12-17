@@ -14,8 +14,7 @@ class Cookie_Notice_Consent_Admin {
 	 */
 	public function __construct( $instance ) {
 		$this->cnc = $instance;
-		// Add actions in init, since settings need to be loaded earlier
-		add_action( 'init', array( $this, 'init_consent_actions' ) );
+		add_action( 'init', array( $this, 'init_consent_actions' ), 150 );
 	}
 	
 	/**

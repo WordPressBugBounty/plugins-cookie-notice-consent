@@ -18,11 +18,9 @@ class Cookie_Notice_Consent_Settings {
 	public function __construct( $instance ) {
 		
 		$this->cnc = $instance;
-		$this->option_groups = $this->cnc->helper->get_option_groups();
-		$this->defaults = $this->get_default_options();
 		
 		// Load options late to allow for get_option filtering by other plugins (WPML / Polylang)
-		add_action( 'plugins_loaded', array( $this, 'load_options' ), 15 );
+		add_action( 'init', array( $this, 'load_options' ), 75 );
 		
 		// Initialize settings in admin
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
@@ -33,6 +31,9 @@ class Cookie_Notice_Consent_Settings {
 	 * Load the database options
 	 */
 	public function load_options() {
+		$this->option_groups = $this->cnc->helper->get_option_groups();
+		$this->defaults = $this->get_default_options();
+		
 		foreach( $this->option_groups as $slug => $title ) {
 			$this->options[$slug] = get_option( "cookie_notice_consent_$slug" );
 		}
@@ -51,8 +52,6 @@ class Cookie_Notice_Consent_Settings {
 				'privacy_policy_button_label' => __( 'Privacy policy', 'cookie-notice-consent' ),
 				'revoke_consent_button_label' => __( 'Revoke consent', 'cookie-notice-consent' ),
 				'block_embeds' => '0',
-				'respect_dnt' => '0',
-				'respect_gpc' => '0'
 			),
 			'design_settings' => array(
 				'theme' => 'default'
@@ -207,29 +206,6 @@ class Cookie_Notice_Consent_Settings {
 			array( $this, 'cb_setting_reload_on_set' ),
 			'cookie_notice_consent_general_settings_group',
 			'section_general_notice'
-		);
-		
-		add_settings_section(
-			'section_general_privacy',
-			__( 'Privacy Settings', 'cookie-notice-consent' ),
-			array( $this, 'cb_settings_section_general_privacy_settings' ),
-			'cookie_notice_consent_general_settings_group'
-		);
-		
-		add_settings_field(
-			'respect_dnt',
-			__( 'Respect DNT', 'cookie-notice-consent' ),
-			array( $this, 'cb_setting_respect_dnt' ),
-			'cookie_notice_consent_general_settings_group',
-			'section_general_privacy'
-		);
-		
-		add_settings_field(
-			'respect_gpc',
-			__( 'Respect GPC', 'cookie-notice-consent' ),
-			array( $this, 'cb_setting_respect_gpc' ),
-			'cookie_notice_consent_general_settings_group',
-			'section_general_privacy'
 		);
 		
 		add_settings_section(
@@ -452,28 +428,6 @@ class Cookie_Notice_Consent_Settings {
 			'general_settings',
 			'reload',
 			__( 'Reload page after cookie choice has been saved', 'cookie-notice-consent' )
-		);
-	}
-	
-	public function cb_settings_section_general_privacy_settings() {
-		echo '<p>' . __( 'Manage general privacy settings.', 'cookie-notice-consent' ) . '</p>';
-	}
-	
-	public function cb_setting_respect_dnt() {
-		$this->render_settings_field_checkbox(
-			'general_settings',
-			'respect_dnt',
-			__( 'Respect the Do Not Track (DNT) signal that the visitor might send', 'cookie-notice-consent' ),
-			__( 'If the client sends the corresponding request, the consent banner will not be output at all.', 'cookie-notice-consent' )
-		);
-	}
-	
-	public function cb_setting_respect_gpc() {
-		$this->render_settings_field_checkbox(
-			'general_settings',
-			'respect_gpc',
-			__( 'Respect the Global Privacy Control (GPC) signal that the visitor might send', 'cookie-notice-consent' ),
-			__( 'If the client sends the corresponding request, the consent banner will not be output at all.', 'cookie-notice-consent' )
 		);
 	}
 	

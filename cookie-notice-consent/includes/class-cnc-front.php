@@ -14,8 +14,7 @@ class Cookie_Notice_Consent_Front {
 	 */
 	public function __construct( $instance ) {
 		$this->cnc = $instance;
-		// Add actions in init, since settings need to be loaded earlier
-		add_action( 'init', array( $this, 'init_front' ) );
+		add_action( 'init', array( $this, 'init_front' ), 150 );
 	}
 	
 	/**
@@ -27,26 +26,8 @@ class Cookie_Notice_Consent_Front {
 		add_filter( 'body_class', array( $this, 'add_cookie_status_body_classes' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_cookie_notice_consent_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_cookie_notice_consent_scripts' ) );
-		// Only print notice and category code if no privacy signal was sent
-		if( ! $this->privacy_signal_detected() ) {
-			add_action( 'wp_footer', array( $this, 'print_cookie_notice' ), 1000 );
-			$this->maybe_print_category_code();
-		}
-	}
-	
-	/**
-	 * Check if client sent a privacy default and CNC should respect it
-	 */
-	public function privacy_signal_detected() {
-		// Do Not Track
-		if( $this->cnc->settings->get_option( 'general_settings', 'respect_dnt' ) ) {
-			return ( isset( $_SERVER['HTTP_DNT'] ) && $_SERVER['HTTP_DNT'] === '1' );
-		}
-		// Global Privacy Control
-		if( $this->cnc->settings->get_option( 'general_settings', 'respect_dnt' ) ) {
-			return ( isset( $_SERVER['HTTP_SEC_GPC'] ) && $_SERVER['HTTP_SEC_GPC'] === '1' );
-		}
-		return false;
+		add_action( 'wp_footer', array( $this, 'print_cookie_notice' ), 1000 );
+		$this->maybe_print_category_code();
 	}
 	
 	/**
@@ -134,8 +115,8 @@ class Cookie_Notice_Consent_Front {
 				'log'				=> 1,
 				'ajax_url'			=> admin_url( 'admin-ajax.php' ),
 				'ajax_nonce'		=> wp_create_nonce( 'cookie_notice_consent' ),
-				'remote_addr'		=> filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP ),
-				'http_user_agent'	=> $_SERVER['HTTP_USER_AGENT'],
+				'remote_addr'		=> isset( $_SERVER['REMOTE_ADDR'] ) ? filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP ) : '',
+				'http_user_agent'	=> isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '',
 			) );
 		}
 		
@@ -168,8 +149,6 @@ class Cookie_Notice_Consent_Front {
 		if( is_admin() )
 			return $classes;
 		$classes[] = $this->cnc->helper->is_cookie_consent_set() ? 'cookie-consent-set' : 'cookie-consent-not-set';
-		if( $this->privacy_signal_detected() )
-			$classes[] = 'privacy-signal';
 		return $classes;
 	}
 	
