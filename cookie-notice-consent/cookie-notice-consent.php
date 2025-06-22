@@ -3,10 +3,10 @@
 /*
  * Plugin Name:		Cookie Notice & Consent
  * Description:		Display a cookie notice, collect consent for different categories and output scripts if consent is given.
- * Version:			1.6.3
+ * Version:			1.6.4
  * Author:			Christoph Rado
  * Author URI:		https://christophrado.de/
- * Tested up to:	6.7
+ * Tested up to:	6.8
  */
 
 defined( 'ABSPATH' ) || die();
@@ -25,7 +25,7 @@ class Cookie_Notice_Consent {
 	/**
 	 * Current plugin version
 	 */
-	private $version = '1.6.3';
+	private $version = '1.6.4';
 	
 	/**
 	 * Constructor

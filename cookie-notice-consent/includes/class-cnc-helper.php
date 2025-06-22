@@ -21,7 +21,7 @@ class Cookie_Notice_Consent_Helper {
 	 */
 	public static function is_cookie_category_accepted( $category ) {
 		// Bail early if cookie isn't set
-		if( !isset( $_COOKIE['cookie_consent'] ) )
+		if( ! isset( $_COOKIE['cookie_consent'] ) )
 			return false;
 		// Add prefix if not present
 		$category = ( 0 !== strpos( $category, 'category_' ) ) ? ( 'category_' . $category ) : $category;
@@ -30,6 +30,9 @@ class Cookie_Notice_Consent_Helper {
 		// Bail if json_decode was not successful
 		if( null === $cookieData )
 			return false;
+		// Essential category is always active if the CNC cookie is valid
+		if( 'category_essential' == $category )
+			return true;
 		// See if requested category is set
 		$result = isset( $cookieData->cookie_categories ) && in_array( $category, $cookieData->cookie_categories ) == '1' ? true : false;
 		// Return result

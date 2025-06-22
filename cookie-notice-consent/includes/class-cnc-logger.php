@@ -160,15 +160,15 @@ class Cookie_Notice_Consent_Logger {
 	 * Single consent view functions and filters
 	 */
 	public function manage_admin_views() {
-		global $typenow;
-		if( empty( $typenow ) ) {
-			// try to pick it up from the query string
-			if( !empty( $_GET['post'] ) ) {
-				$post = get_post( $_GET['post'] );
-				$typenow = $post->post_type;
-			}
+		$post_type = '';
+		if( isset( $_GET['post'] ) && ! empty( $_GET['post'] ) ) {
+			$post_id = intval( $_GET['post'] );
+			$post_type = get_post_type( $post_id );
 		}
-		if( 'cookie_consent' == $typenow ) {
+		if( isset( $_GET['post_type'] ) && ! empty( $_GET['post_type'] ) ) {
+			$post_type = $_GET['post_type'];
+		}
+		if( 'cookie_consent' == $post_type ) {
 			// Posts list: remove Quick Edit, remove Edit, add View
 			add_filter( 'post_row_actions', array( $this, 'consent_post_row_actions' ), 10, 2 );
 			// Bulk actions: Remove Edit
@@ -183,7 +183,7 @@ class Cookie_Notice_Consent_Logger {
 			add_action( 'add_meta_boxes', array( $this, 'consent_meta_boxes' ) );
 		}
 	}
-		
+	
 	/**
 	 * Set post table actions
 	 */

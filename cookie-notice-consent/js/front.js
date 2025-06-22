@@ -184,36 +184,45 @@
 			}
 			
 		};
+		
+		// embed blocking
+		
+		this.decodeHTML = function( html ) {
+			let txt = document.createElement( 'textarea' );
+			txt.innerHTML = html;
+			return txt.value;
+		}
+		
+		this.createElementFromHTML = function( htmlString ) {
+			let div = document.createElement( 'div' );
+			div.innerHTML = htmlString.trim();
+			return div.firstChild; 
+		}
+		
+		this.initEmbedUnblocker = function() {
+			let _this = this;
+			let items = document.getElementsByClassName( 'cookie-notice-consent__embed-unblock' );
+			for( let i = 0; i < items.length; i++ ) {
+				items[i].onclick = function() {
+					let embed_code = _this.decodeHTML( this.getAttribute( 'data-embed-content' ) );
+					this.parentNode.replaceWith( _this.createElementFromHTML( embed_code ) );
+					if( 'twitter.com' == this.getAttribute( 'data-embed-provider' ) ) {
+						let script = document.createElement( 'script' );
+						let head = document.head || document.getElementsByTagName( 'head' )[0];
+						script.src = '//platform.twitter.com/widgets.js';
+						script.async = false;
+						head.insertBefore( script, head.firstChild );
+					}
+				}
+			}
+		}
 	}
-
+	
 	window.addEventListener( 'load', function () {
 		cookieNoticeConsent.init();
+		cookieNoticeConsent.initEmbedUnblocker();
 	}, false );
 
 } )( window, document );
 
 
-function decodeHTML( html ) {
-	let txt = document.createElement( 'textarea' );
-	txt.innerHTML = html;
-	return txt.value;
-}
-function createElementFromHTML( htmlString ) {
-	let div = document.createElement( 'div' );
-	div.innerHTML = htmlString.trim();
-	return div.firstChild; 
-}
-let items = document.getElementsByClassName( 'cookie-notice-consent__embed-unblock' );
-for( let i = 0; i < items.length; i++ ) {
-	items[i].onclick = function() {
-		let embed_code = decodeHTML( this.getAttribute( 'data-embed-content' ) );
-		this.parentNode.replaceWith( createElementFromHTML( embed_code ) );
-		if( 'twitter.com' == this.getAttribute( 'data-embed-provider' ) ) {
-			let script = document.createElement( 'script' );
-			let head = document.head || document.getElementsByTagName( 'head' )[0];
-			script.src = '//platform.twitter.com/widgets.js';
-			script.async = false;
-			head.insertBefore( script, head.firstChild );
-		}
-	}
-}
