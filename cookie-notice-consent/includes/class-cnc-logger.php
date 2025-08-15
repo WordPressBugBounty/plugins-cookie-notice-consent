@@ -141,16 +141,16 @@ class Cookie_Notice_Consent_Logger {
 	public function add_cookie_consent_log( $data ) {
 		// Construct meta data to save
 		$meta = array(
-			'uuid'				=> !empty( $data->uuid ) ? $data->uuid : '',
-			'categories'		=> !empty( $data->categories ) ? serialize( $this->cnc->logger->allowed_cookie_categories_filter( $data->categories ) ) : serialize( '' ),
-			'remote_addr'		=> !empty( $data->remote_addr ) ? ( $this->cnc->settings->get_option( 'consent_settings', 'anonymize_consent_log_ips' ) ? wp_privacy_anonymize_ip( $data->remote_addr ) : $data->remote_addr ) : '',
-			'http_user_agent'	=> !empty( $data->http_user_agent ) ? $data->http_user_agent : ''
+			'uuid'				=> ! empty( $data->uuid ) ? $data->uuid : '',
+			'categories'		=> ! empty( $data->categories ) ? serialize( $this->cnc->logger->allowed_cookie_categories_filter( $data->categories ) ) : serialize( '' ),
+			'remote_addr'		=> ! empty( $data->remote_addr ) ? ( $this->cnc->settings->get_option( 'consent_settings', 'anonymize_consent_log_ips' ) ? wp_privacy_anonymize_ip( $data->remote_addr ) : $data->remote_addr ) : '',
+			'http_user_agent'	=> ! empty( $data->http_user_agent ) ? sanitize_text_field( $data->http_user_agent ) : ''
 		);
 		// Insert post with meta into db
 		wp_insert_post( array(
 			'post_type'			=> 'cookie_consent',
 			'post_status'		=> 'publish',
-			'post_title'		=> !empty( $data->uuid ) ? wp_strip_all_tags( $data->uuid ) : '',
+			'post_title'		=> ! empty( $data->uuid ) ? wp_strip_all_tags( $data->uuid ) : '',
 			'meta_input'		=> $meta
 		) );
 		_e( 'Cookie consent saved.', 'cookie-notice-consent' );
