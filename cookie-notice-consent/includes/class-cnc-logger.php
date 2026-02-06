@@ -141,7 +141,7 @@ class Cookie_Notice_Consent_Logger {
 	public function add_cookie_consent_log( $data ) {
 		// Construct meta data to save
 		$meta = array(
-			'uuid'				=> ! empty( $data->uuid ) ? $data->uuid : '',
+			'uuid'				=> ! empty( $data->uuid ) ? wp_strip_all_tags( $data->uuid ) : '',
 			'categories'		=> ! empty( $data->categories ) ? serialize( $this->cnc->logger->allowed_cookie_categories_filter( $data->categories ) ) : serialize( '' ),
 			'remote_addr'		=> ! empty( $data->remote_addr ) ? ( $this->cnc->settings->get_option( 'consent_settings', 'anonymize_consent_log_ips' ) ? wp_privacy_anonymize_ip( $data->remote_addr ) : $data->remote_addr ) : '',
 			'http_user_agent'	=> ! empty( $data->http_user_agent ) ? sanitize_text_field( $data->http_user_agent ) : ''
@@ -261,7 +261,7 @@ class Cookie_Notice_Consent_Logger {
 		<table class="cookie-notice-consent__consent-data-table">
 			<tr>
 				<td><?php _e( 'UUID', 'cookie-notice-consent' ); ?></td>
-				<td><?php echo get_post_meta( get_the_id(), 'uuid', true ); ?></td>
+				<td><?php echo esc_textarea( get_post_meta( get_the_id(), 'uuid', true ) ); ?></td>
 			</tr>
 			<tr>
 				<td><?php _e( 'Date/Time', 'cookie-notice-consent' ); ?></td>
@@ -269,11 +269,11 @@ class Cookie_Notice_Consent_Logger {
 			</tr>
 			<tr>
 				<td><?php _e( 'Remote Address', 'cookie-notice-consent' ); ?></td>
-				<td><?php echo get_post_meta( get_the_id(), 'remote_addr', true ); ?></td>
+				<td><?php echo esc_textarea( get_post_meta( get_the_id(), 'remote_addr', true ) ); ?></td>
 			</tr>
 			<tr>
 				<td><?php _e( 'HTTP User Agent', 'cookie-notice-consent' ); ?></td>
-				<td><?php echo get_post_meta( get_the_id(), 'http_user_agent', true ); ?></td>
+				<td><?php echo esc_textarea( get_post_meta( get_the_id(), 'http_user_agent', true ) ); ?></td>
 			</tr>
 			<tr>
 				<td><?php _e( 'Cookie Categories', 'cookie-notice-consent' ); ?></td>

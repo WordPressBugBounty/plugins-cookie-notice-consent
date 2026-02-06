@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/christophrado
 Tags: cookie, consent, compliance, gdpr, dsgvo
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.6.5
+Stable tag: 1.6.6
 Requires PHP: 7.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -75,6 +75,9 @@ If this plugin does not meet your legal requirements, I encourage you not to use
 5. Consent logs and basic consent statistics per category
 
 == Changelog ==
+
+= 1.6.6 =
+* Fixed: XSS vulnerability (non-sanitized consent log data; disclosed by Wordfence)
 
 = 1.6.5 =
 * Fixed: XSS vulnerability (non-sanitized consent log data; disclosed by Patchstack)
